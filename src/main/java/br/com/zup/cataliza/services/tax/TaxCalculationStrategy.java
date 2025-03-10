@@ -1,4 +1,4 @@
-package br.com.zup.cataliza.service;
+package br.com.zup.cataliza.services.tax;
 
 public interface TaxCalculationStrategy {
     double calculateTax(double value);
