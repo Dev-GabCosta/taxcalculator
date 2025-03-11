@@ -1,13 +1,13 @@
 package br.com.zup.cataliza.services;
 
-import br.com.zup.cataliza.repositories.UserRepository;
 import br.com.zup.cataliza.dtos.UserRegister;
 import br.com.zup.cataliza.dtos.UserResponse;
 import br.com.zup.cataliza.models.User;
+import br.com.zup.cataliza.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
 private final UserRepository userRepository;
 
 	public UserServiceImpl(UserRepository userRepository) {
