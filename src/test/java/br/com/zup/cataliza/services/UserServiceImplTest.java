@@ -5,7 +5,6 @@ import br.com.zup.cataliza.dtos.UserResponse;
 import br.com.zup.cataliza.models.User;
 import br.com.zup.cataliza.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.Field;
 
@@ -13,14 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserServiceImplTest {
 
 	@Test
 	void testCreateUser() throws NoSuchFieldException, IllegalAccessException{
 		String username = "gabs3452";
 		String password = "senha3452";
 		UserRepository userRepository = mock(UserRepository.class);
-		UserService userService= new UserService(userRepository);
+		UserServiceImpl userServiceImpl = new UserServiceImpl(userRepository);
 		UserRegister userRegister = new UserRegister(username, password, null);
 		when(userRepository.save(any(User.class))).thenAnswer(
 				invocation -> {
@@ -31,7 +30,7 @@ class UserServiceTest {
 					return user;
 				}
 		);
-		UserResponse createdUser = userService.createUser(userRegister);
+		UserResponse createdUser = userServiceImpl.createUser(userRegister);
 		assertNotNull(createdUser);
 		assertEquals(1L, createdUser.id());
 		assertEquals(username, createdUser.username());
