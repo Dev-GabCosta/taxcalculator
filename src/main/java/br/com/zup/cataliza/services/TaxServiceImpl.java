@@ -4,7 +4,9 @@ import br.com.zup.cataliza.dtos.TaxRegister;
 import br.com.zup.cataliza.dtos.TaxResponse;
 import br.com.zup.cataliza.models.Tax;
 import br.com.zup.cataliza.repositories.TaxRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TaxServiceImpl implements TaxService{
 	private  final TaxRepository taxRepository;
 
