@@ -1,5 +1,6 @@
 package br.com.zup.cataliza.controllers;
 
+import br.com.zup.cataliza.controllers.TaxController;
 import br.com.zup.cataliza.dtos.TaxRegister;
 import br.com.zup.cataliza.dtos.TaxResponse;
 import br.com.zup.cataliza.services.TaxService;
@@ -21,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(UserController.TaxController.class)
+@WebMvcTest(TaxController.class)
 public class TaxControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -31,7 +32,7 @@ public class TaxControllerTest {
 	private TaxService taxService;
 
 	@Test
-	void testCreateTax() throws JsonProcessingException {
+	void testCreateTax() throws Exception {
 		String taxName = "ICMS";
 		String description = "Imposto sobre bens de consumo e serviços";
 		Double taxRate = 0.192;
