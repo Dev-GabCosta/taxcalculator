@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-public class TaxServiceTest {
+class TaxServiceTest {
 
 	@Test
-	void testCreateTax() throws NoSuchFieldException, IllegalAccessException {
+	void testCreateTax() {
 		String taxName = "ICMS";
 		String description = "Imposto sobre bens de consumo e serviços";
 		Double taxRate = 0.192;
