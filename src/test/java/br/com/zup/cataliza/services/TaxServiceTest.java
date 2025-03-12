@@ -28,7 +28,7 @@ class TaxServiceTest {
 		when(taxRepository.save(any(Tax.class))).thenAnswer(
 				invocation -> {
 					Tax tax = invocation.getArgument(0);
-					Field idField = User.class.getDeclaredField("id");
+					Field idField = Tax.class.getDeclaredField("id");
 					idField.setAccessible(true);
 					idField.set(tax, 1L);
 					return tax;
