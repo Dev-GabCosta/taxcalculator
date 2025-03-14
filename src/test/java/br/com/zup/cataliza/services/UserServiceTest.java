@@ -1,12 +1,8 @@
 package br.com.zup.cataliza.services;
 
-import br.com.zup.cataliza.dtos.TaxRegister;
-import br.com.zup.cataliza.dtos.TaxResponse;
 import br.com.zup.cataliza.dtos.UserRegister;
 import br.com.zup.cataliza.dtos.UserResponse;
-import br.com.zup.cataliza.models.Tax;
 import br.com.zup.cataliza.models.User;
-import br.com.zup.cataliza.repositories.TaxRepository;
 import br.com.zup.cataliza.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-class UserServiceImplTest {
+class UserServiceTest {
 
 	@Test
 	void testCreateUser() throws NoSuchFieldException, IllegalAccessException{
