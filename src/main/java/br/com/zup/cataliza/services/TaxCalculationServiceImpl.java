@@ -6,9 +6,11 @@ import br.com.zup.cataliza.models.Tax;
 import br.com.zup.cataliza.repositories.TaxRepository;
 import br.com.zup.cataliza.services.TaxCalculationService;
 import br.com.zup.cataliza.services.calculation.CalculationTax;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class TaxCalculationServiceImpl implements TaxCalculationService {
 	private final TaxRepository taxRepository;
 	private final CalculationTax calculationTax;
@@ -33,17 +35,7 @@ public class TaxCalculationServiceImpl implements TaxCalculationService {
 		Double taxRate = optionalTax.get().getTaxRate();
 		Double value = register.valorBase();
 
-		if (id == 1) {
-			taxValue = calculationTax.calculateIcms(value);
-		}
-
-		if (id == 2) {
-			taxValue = calculationTax.calculateCofins(value);
-		}
-
-		if (id == 3) {
-			taxValue = calculationTax.calculatePis(value);
-		}
+		taxValue =  calculationTax.calculate(value, taxRate);
 
 		return new CalculationResponse(
 				taxType,

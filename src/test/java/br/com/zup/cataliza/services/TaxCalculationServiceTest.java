@@ -19,6 +19,7 @@ public class TaxCalculationServiceTest {
 	void testCalculateTax() throws NoSuchFieldException, IllegalAccessException {
 		Long taxId = 1L;
 		Double value = 1000.0;
+
 		TaxRepository repository = mock(TaxRepository.class);
 		CalculationTax calculationTax = mock(CalculationTax.class);
 		TaxCalculationServiceImpl service = new TaxCalculationServiceImpl(repository, calculationTax);
@@ -29,7 +30,7 @@ public class TaxCalculationServiceTest {
 		idField.set(tax, taxId);
 		when(repository.findById(taxId))
 				.thenReturn(Optional.of(tax));
-		when(calculationTax.calculateIcms(value)).thenReturn(192.0);
+		when(calculationTax.calculate(value, tax.getTaxRate())).thenReturn(192.0);
 		CalculationResponse response = service.calculateTax(calculationRegister);
 		Assertions.assertNotNull(response);
 		Assertions.assertEquals("ICMS", response.tipoImposto());
@@ -39,6 +40,6 @@ public class TaxCalculationServiceTest {
 		verify(repository, times(1))
 				.findById(taxId);
 		verify(calculationTax, times(1))
-				.calculateIcms(value);
+				.calculate(value, tax.getTaxRate());
 	}
 }
