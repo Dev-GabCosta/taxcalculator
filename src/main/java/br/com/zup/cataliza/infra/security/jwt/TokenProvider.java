@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 	@Value("${JWT_SECRET}")
-	private final String secretKey;
+	private String secretKey;
 	private final long expirationDate = 3600000;
 
 	public String generateToken(Authentication authentication) {
@@ -28,7 +28,7 @@ public class TokenProvider {
 				               .issuedAt(new Date())
 				               .expiration(expireDate)
 				               .claim("roles", "ROLE_USER")
-				               .signWith(SignatureAlgorithm.ES256, key())
+				               .signWith(SignatureAlgorithm.HS256, key())
 				               .compact();
 		return token;
 	}
