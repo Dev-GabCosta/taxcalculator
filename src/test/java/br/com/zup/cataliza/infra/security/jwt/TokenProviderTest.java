@@ -1,35 +1,33 @@
 package br.com.zup.cataliza.infra.security.jwt;
 
-import br.com.zup.cataliza.infra.security.jwt.TokenProvider;
-
-import java.lang.reflect.Field;
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.Mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.TestPropertySource;
+
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@TestPropertySource(properties = {"JWT_SECRET=c2VjcmV0LWtleS10by1iZS11c2VkLWZvci10ZXN0aW5n"})
 class TokenProviderTest {
+	@Autowired
 	private TokenProvider tokenProvider;
 	private Authentication authentication;
 	private final String secretKey = "c2VjcmV0LWtleS10by1iZS11c2VkLWZvci10ZXN0aW5n";
 
 	@BeforeEach
 	void setup() throws NoSuchFieldException, IllegalAccessException {
-		tokenProvider = new TokenProvider();
 		authentication = Mockito.mock(Authentication.class);
-		Field fieldSecretKey = TokenProvider.class.getDeclaredField("secretKey");
-		fieldSecretKey.setAccessible(true);
-		fieldSecretKey.set(tokenProvider, secretKey);
 	}
 
 	@Test
