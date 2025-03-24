@@ -5,6 +5,7 @@ import br.com.zup.cataliza.dtos.TaxResponse;
 import br.com.zup.cataliza.services.TaxService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class TaxController {
 	}
 
 	@PostMapping
+	@PreAuthorize(
+			"hasRole('ROLE_ADMIN')"
+	)
 	public ResponseEntity<TaxResponse> createTax(@RequestBody TaxRegister taxRegister) {
 		TaxResponse response = taxService.createTax(taxRegister);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -37,7 +41,10 @@ public class TaxController {
 	}
 
 	@DeleteMapping("/{id}")
-	public  ResponseEntity deleteTax(@PathVariable Long id){
+	@PreAuthorize(
+			"hasRole('ROLE_ADMIN')"
+	)
+	public ResponseEntity deleteTax(@PathVariable Long id) {
 		taxService.deleteTax(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

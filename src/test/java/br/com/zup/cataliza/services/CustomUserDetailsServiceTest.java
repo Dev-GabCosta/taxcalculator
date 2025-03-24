@@ -1,5 +1,6 @@
 package br.com.zup.cataliza.services;
 
+import br.com.zup.cataliza.models.Role;
 import br.com.zup.cataliza.models.User;
 import br.com.zup.cataliza.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +31,9 @@ class CustomUserDetailsServiceTest {
 	void testLoadUserByUsername() {
 		String username = "mariofernandes3852";
 		String password = "mariopassword";
-		User mockUser = new User(username, password);
-		mockUser.setRoles(new HashSet<>());
+		String roleName = "ROLE_USER";
+		Role role = new Role(roleName);
+		User mockUser = new User(username, password, role);
 
 		Mockito.when(userRepository.findByUsername(username))
 				.thenReturn(Optional.of(mockUser));

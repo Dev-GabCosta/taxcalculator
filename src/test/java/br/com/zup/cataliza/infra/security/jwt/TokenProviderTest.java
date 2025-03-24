@@ -5,11 +5,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.security.Key;
 import java.util.Base64;
@@ -17,28 +22,28 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@TestPropertySource(properties = {"JWT_SECRET=c2VjcmV0LWtleS10by1iZS11c2VkLWZvci10ZXN0aW5n"})
+
 class TokenProviderTest {
-	@Autowired
 	private TokenProvider tokenProvider;
-	private Authentication authentication;
-	private final String secretKey = "c2VjcmV0LWtleS10by1iZS11c2VkLWZvci10ZXN0aW5n";
+	private String secretKey = "c2VjcmV0LWtleS10by1iZS11c2VkLWZvci10ZXN0aW5n";
 
 	@BeforeEach
 	void setup() throws NoSuchFieldException, IllegalAccessException {
-		authentication = Mockito.mock(Authentication.class);
+		tokenProvider = new TokenProvider();
+		ReflectionTestUtils.setField(tokenProvider, "secretKey",
+				secretKey);
 	}
 
 	@Test
 	void testGenerateToken() {
 		String username = "Alana_Cristina";
-		Mockito.when(authentication.getName())
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getName())
 				.thenReturn(username);
 		String token = tokenProvider.generateToken(authentication);
 
 		assertNotNull(token);
-		assert (!token.isEmpty());
+		assertFalse(token.isEmpty());
 		Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
 		Claims claims = Jwts.parser()
 				                .setSigningKey(key)

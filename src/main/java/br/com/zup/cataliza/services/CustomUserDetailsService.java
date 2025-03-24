@@ -9,10 +9,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserRepository repository;
@@ -22,14 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 		User user = repository.findByUsername(username).orElseThrow(() ->
 				                                                            new UsernameNotFoundException("Nome de usuário não encontrado"));
 
-		Set<GrantedAuthority> authorities = user.getRoles()
-				                                    .stream()
-				                                    .map(
-						                                    role -> new SimpleGrantedAuthority(
-								                                    role.getName()
-						                                    )
-				                                    )
-				                                    .collect(Collectors.toSet());
+		Set<GrantedAuthority> authorities = Collections.singleton(
+				new SimpleGrantedAuthority(
+						user.getRole().getName()
+				)
+		);
 
 		return new CustomUserDetails(
 				username,

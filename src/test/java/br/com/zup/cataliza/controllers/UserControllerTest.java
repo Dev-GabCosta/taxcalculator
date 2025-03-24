@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -32,8 +34,9 @@ public class UserControllerTest {
 	void testCreateUser() throws Exception {
 		String username = "gabs3425";
 		String password = "senha23451";
-		UserRegister userRegister = new UserRegister(username, password, null);
-		UserResponse userResponse = new UserResponse(1L, username, password);
+		String role = "ROLE_USER";
+		UserRegister userRegister = new UserRegister(username, password, role);
+		UserResponse userResponse = new UserResponse(1L, username, role);
 		when(userService.createUser(any(UserRegister.class))).thenReturn(userResponse);
 		mockMvc.perform(post("/user/register")
 				                .contentType("application/json")
@@ -42,8 +45,8 @@ public class UserControllerTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.username")
 						           .value(username))
-				.andExpect(jsonPath("$.password")
-						           .value(password));
+				.andExpect(jsonPath("$.role")
+						           .value(role));
 
 		verify(userService, times(1)).createUser(any(UserRegister.class));
 	}
