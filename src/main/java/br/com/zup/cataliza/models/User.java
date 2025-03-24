@@ -2,8 +2,6 @@ package br.com.zup.cataliza.models;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -14,19 +12,17 @@ public class User {
 	private String username;
 	@Column(nullable = false, unique = true)
 	private String password;
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "user_roles",
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-	)
-	private Set<Role> roles;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
 
 	public User() {
 	}
 
-	public User(String username, String password) {
+	public User(String username, String password, Role role) {
 		this.username = username;
 		this.password = password;
+		this.role = role;
 	}
 
 	public Long getId() {
@@ -41,11 +37,7 @@ public class User {
 		return password;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public Role getRole() {
+		return role;
 	}
 }
