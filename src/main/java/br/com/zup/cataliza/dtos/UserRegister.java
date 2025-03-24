@@ -7,6 +7,6 @@ import java.util.List;
 public record UserRegister(
 		String username,
 		String password,
-		List<Roles> roles
+		String role
 ) {
 }
