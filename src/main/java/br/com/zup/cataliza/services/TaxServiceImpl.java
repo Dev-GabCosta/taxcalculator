@@ -76,6 +76,6 @@ public class TaxServiceImpl implements TaxService {
 	}
 
 	private String showExceptionNotFound(Long id) {
-		"Nenhum tipo de imposto com o id " + id + " foi encontrado";
+		return "Nenhum tipo de imposto com o id " + id + " foi encontrado";
 	}
 }
