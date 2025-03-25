@@ -2,6 +2,7 @@ package br.com.zup.cataliza.services;
 
 import br.com.zup.cataliza.dtos.TaxRegister;
 import br.com.zup.cataliza.dtos.TaxResponse;
+import br.com.zup.cataliza.exceptions.TaxNotFoundException;
 import br.com.zup.cataliza.models.Tax;
 import br.com.zup.cataliza.repositories.TaxRepository;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class TaxServiceImpl implements TaxService {
 		Optional<Tax> optionalTax = taxRepository.findById(id);
 
 		if (optionalTax.isEmpty()) {
-			throw new RuntimeException("Não foi possível encontrar nenhum imposto com o id" + id);
+			throw new TaxNotFoundException(showExceptionNotFound(id));
 		}
 
 		Tax tax = optionalTax.get();
@@ -68,10 +69,13 @@ public class TaxServiceImpl implements TaxService {
 		Optional<Tax> optionalTax = taxRepository.findById(id);
 
 		if (optionalTax.isEmpty()) {
-			throw new RuntimeException("Não foi possível encontrar nenhum imposto com o id" + id);
+			throw new TaxNotFoundException(showExceptionNotFound(id));
 		}
 
 		taxRepository.deleteById(id);
 	}
 
+	private String showExceptionNotFound(Long id) {
+		"Nenhum tipo de imposto com o id " + id + " foi encontrado";
+	}
 }
