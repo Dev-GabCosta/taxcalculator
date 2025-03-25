@@ -25,10 +25,7 @@ public class TokenProvider {
 	public String generateToken(Authentication authentication) {
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		String username = userDetails.getUsername();
-		String role = userDetails.getAuthorities()
-				              .iterator()
-				              .next()
-				              .getAuthority();
+		String role = userDetails.getSingleAuthority();
 		Date currentDate = new Date();
 		Date expireDate = new Date(currentDate.getTime() + expirationDate);
 		String token = Jwts.builder()

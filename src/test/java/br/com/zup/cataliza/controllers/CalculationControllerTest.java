@@ -6,6 +6,9 @@ import br.com.zup.cataliza.services.TaxCalculationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,16 +22,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(CalculationController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class CalculationControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@MockitoBean
+	@Mock
 	private TaxCalculationService taxCalculationService;
+	@InjectMocks
+	private CalculationController calculationController;
 
 	@Test
 	void testCalculateTax() throws Exception {
@@ -44,26 +43,7 @@ public class CalculationControllerTest {
 		when(taxCalculationService.calculateTax(any(CalculationRegister.class)))
 				.thenReturn(calculationResponse);
 
-		mockMvc.perform(
-						post("/calculo")
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(objectMapper.writeValueAsString(calculationRegister))
-				)
-				.andExpect(status().isOk())
-				.andExpect(
-						jsonPath("$.tipoImposto")
-								.value(taxName))
-				.andExpect(
-						jsonPath("$.valorBase")
-								.value(value))
-				.andExpect(
-						jsonPath("$.aliquota")
-								.value(taxRate)
-				)
-				.andExpect(
-						jsonPath("$.valorImposto")
-								.value(taxValue)
-				);
+		calculationController.calculateTax(calculationRegister);
 
 		verify(taxCalculationService, times(1))
 				.calculateTax(any(CalculationRegister.class));

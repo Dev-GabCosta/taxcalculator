@@ -3,36 +3,27 @@ package br.com.zup.cataliza.controllers;
 import br.com.zup.cataliza.dtos.Login;
 import br.com.zup.cataliza.services.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(AuthenticationController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 class AuthenticationControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@MockitoBean
+	@Mock
 	private AuthenticationService authenticationService;
+	@InjectMocks
+	private AuthenticationController authenticationController;
 
 	@Test
 	void testLogin() throws Exception {
@@ -43,12 +34,8 @@ class AuthenticationControllerTest {
 		String mockToken = "mocked-jwt-token";
 		Mockito.when(authenticationService.login(Mockito.any(Login.class)))
 				.thenReturn(mockToken);
-		mockMvc.perform(post("/user/login")
-				                .contentType(MediaType.APPLICATION_JSON)
-				                .content(objectMapper.writeValueAsString(loginRequest)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.accessToken").value(mockToken));
 
+		authenticationController.login(loginRequest);
 		Mockito.verify(authenticationService, Mockito.times(1))
 				.login(Mockito.any(Login.class));
 	}

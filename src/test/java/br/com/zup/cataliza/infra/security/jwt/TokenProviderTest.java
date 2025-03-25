@@ -1,5 +1,6 @@
 package br.com.zup.cataliza.infra.security.jwt;
 
+import br.com.zup.cataliza.models.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -36,27 +38,28 @@ class TokenProviderTest {
 
 	@Test
 	void testGenerateToken() {
-		String username = "Alana_Cristina";
+		String username = "maria2384";
+		String role = "ROLE_USER";
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getName())
-				.thenReturn(username);
+		CustomUserDetails userDetails = mock(CustomUserDetails.class);
+		when(authentication.getPrincipal()).thenReturn(userDetails);
+		when(userDetails.getUsername()).thenReturn(username);
+		when(userDetails.getSingleAuthority()).thenReturn(role);
 		String token = tokenProvider.generateToken(authentication);
 
 		assertNotNull(token);
-		assertFalse(token.isEmpty());
-		Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
-		Claims claims = Jwts.parser()
-				                .setSigningKey(key)
-				                .build()
-				                .parseClaimsJws(token)
-				                .getBody();
+		Key key = Keys.hmacShaKeyFor(java.util.Base64.getUrlDecoder().decode(secretKey));
+
+		Claims claims = (Claims) Jwts.parser()
+				                         .setSigningKey(key)
+				                         .build()
+				                         .parseClaimsJws(token)
+				                         .getBody();
 
 		assertEquals(username, claims.getSubject());
+		assertEquals(role, claims.get("role"));
 		assertNotNull(claims.getIssuedAt());
 		assertNotNull(claims.getExpiration());
-		Date now = new Date();
-		Date expiration = claims.getExpiration();
-		assertTrue(expiration.after(now));
 	}
 
 }

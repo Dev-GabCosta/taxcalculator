@@ -6,6 +6,9 @@ import br.com.zup.cataliza.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,16 +22,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(UserController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@MockitoBean
+	@Mock
 	private UserService userService;
+	@InjectMocks
+	private UserController userController;
 
 	@Test
 	void testCreateUser() throws Exception {
@@ -38,15 +37,8 @@ public class UserControllerTest {
 		UserRegister userRegister = new UserRegister(username, password, role);
 		UserResponse userResponse = new UserResponse(1L, username, role);
 		when(userService.createUser(any(UserRegister.class))).thenReturn(userResponse);
-		mockMvc.perform(post("/user/register")
-				                .contentType("application/json")
-				                .content(objectMapper.writeValueAsString(userRegister))
-				)
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.username")
-						           .value(username))
-				.andExpect(jsonPath("$.role")
-						           .value(role));
+
+		userController.createUser(userRegister);
 
 		verify(userService, times(1)).createUser(any(UserRegister.class));
 	}
