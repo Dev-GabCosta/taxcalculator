@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ForbiddenException.class)
 	public  ResponseEntity<Map<String, String>> handleForbiddenException(ForbiddenException exception){
 		Map<String, String> error = new HashMap<>();
-		error.put("error", exception.getMessage());
+		error.put("error", "Você não possui permissão para acessar esse recurso");
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 	}
 }
