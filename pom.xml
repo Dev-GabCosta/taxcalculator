@@ -111,6 +111,7 @@
                         <exclude>**/models/**</exclude>
                         <exclude>**/dtos/**</exclude>
                         <exclude>**/repositories/**</exclude>
+                        <exclude>/TaxCalculatorApplication.java</exclude>
                     </excludes>
                 </configuration>
                 <executions>
