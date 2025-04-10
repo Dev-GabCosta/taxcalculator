@@ -25,6 +25,6 @@ jobs:
           java-version: "21"
           distribution: "temurin"
       - name: Build and test
-    run: |
-      mvn install -B
-      mvn test -Dspring.profiles.active=test
+        run: |
+          mvn install -B
+          mvn test -Dspring.profiles.active=test
